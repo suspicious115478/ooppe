@@ -2,28 +2,25 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const db = require('./firebaseConfig');
-const apiAuth = require('./apiAuth');
-const { encrypt } = require('./encryptor');
+const apiAuth = require('./apiAuth'); // Keeps API key checking
+const { encrypt } = require('./encryptor'); // Import encryptor module
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// ✅ Full CORS handling including preflight support
-const corsOptions = {
+app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'x-api-key']
-};
+}));
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // ⚠️ Ensures OPTIONS request doesn’t fail
+app.options('*', cors());
 
-// ✅ Health check endpoint
 app.get('/', (req, res) => {
   res.send('API is live 🚀');
 });
 
-// 🔐 Encrypted data route for a specific ID
+// 🔒 Encrypted Protected Route for single ID
 app.get('/data/:id', apiAuth, async (req, res) => {
   const id = req.params.id;
   const apiKey = req.headers['x-api-key'];
@@ -36,12 +33,12 @@ app.get('/data/:id', apiAuth, async (req, res) => {
     return res.json({ data: encrypted });
   } catch (error) {
     console.error('Error fetching data:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-// 🔐 Encrypted data route for all data
-app.get('/data', apiAuth, async (req, res) => {
+// 🔒 Encrypted Protected Route for all data
+app.get('/data:id', apiAuth, async (req, res) => {
   const apiKey = req.headers['x-api-key'];
   try {
     const snapshot = await db.ref('/').once('value');
@@ -52,11 +49,10 @@ app.get('/data', apiAuth, async (req, res) => {
     return res.json({ data: encrypted });
   } catch (error) {
     console.error('Error fetching all data:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-// ✅ Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
