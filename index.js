@@ -8,7 +8,11 @@ const { encrypt } = require('./encryptor'); // Import encryptor module
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-api-key']
+}));
 
 app.get('/', (req, res) => {
   res.send('API is live 🚀');
