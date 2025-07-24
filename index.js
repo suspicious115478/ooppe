@@ -26,10 +26,10 @@ function encrypt(text) {
   };
 }
 
+// ✅ FIXED: Use clientKey for logging and validation
 function checkApiKey(req, res, next) {
-  console.log("➡️ Received x-api-key:", req.headers['x-api-key']);
   const clientKey = req.headers['x-api-key'];
-  console.log('Received API key:', userKey);
+  console.log('➡️ Received x-api-key:', clientKey);
   if (clientKey !== API_KEY) {
     return res.status(401).json({ error: 'Unauthorized: Invalid API key' });
   }
@@ -61,5 +61,5 @@ app.get('/data/:id', checkApiKey, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
