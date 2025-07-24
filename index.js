@@ -27,6 +27,7 @@ function encrypt(text) {
 }
 
 function checkApiKey(req, res, next) {
+  console.log("➡️ Received x-api-key:", req.headers['x-api-key']);
   const clientKey = req.headers['x-api-key'];
   if (clientKey !== API_KEY) {
     return res.status(401).json({ error: 'Unauthorized: Invalid API key' });
