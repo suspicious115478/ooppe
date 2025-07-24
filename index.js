@@ -14,7 +14,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'x-api-key']
 }));
 
-app.options('*', cors());
 
 app.get('/', (req, res) => {
   res.send('API is live 🚀');
