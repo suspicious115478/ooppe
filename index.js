@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const API_KEY = 'b7f4f6f63c9834012bfa7c8e8a8bc3c2b1d7e1f4e645bcf12c0a2ffb3cb5d4ez';
 
 // 🔐 Crypto setup
-const ENCRYPTION_KEY = crypto.createHash('sha256').update(VALID_API_KEY).digest();
+const ENCRYPTION_KEY = crypto.createHash('sha256').update(API_KEY).digest();
 const IV_LENGTH = 16;
 
 function encrypt(text) {
@@ -28,7 +28,7 @@ function encrypt(text) {
 
 function checkApiKey(req, res, next) {
   const clientKey = req.headers['x-api-key'];
-  if (clientKey !== VALID_API_KEY) {
+  if (clientKey !== API_KEY) {
     return res.status(401).json({ error: 'Unauthorized: Invalid API key' });
   }
   next();
