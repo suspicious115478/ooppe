@@ -38,7 +38,7 @@ app.get('/data/:id', apiAuth, async (req, res) => {
 });
 
 // 🔒 Encrypted Protected Route for all data
-app.get('/data:id', apiAuth, async (req, res) => {
+app.get('/data', apiAuth, async (req, res) => {
   const apiKey = req.headers['x-api-key'];
   try {
     const snapshot = await db.ref('/').once('value');
