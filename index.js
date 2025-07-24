@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
-const VALID_API_KEY = 'your_api_key_here';
+const VALID_API_KEY = 'b7f4f6f63c9834012bfa7c8e8a8bc3c2b1d7e1f4e645bcf12c0a2ffb3cb5d4ez';
 
 // 🔐 Crypto setup
 const ENCRYPTION_KEY = crypto.createHash('sha256').update(VALID_API_KEY).digest();
