@@ -40,7 +40,7 @@ function checkApiKey(req, res, next) {
 const serviceAccount = require('./serviceAccountKey.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://your-project-id.firebaseio.com'
+  databaseURL: 'https://project-6179641329587689976-default-rtdb.firebaseio.com/'
 });
 const db = admin.database();
 
