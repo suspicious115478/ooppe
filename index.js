@@ -1,4 +1,4 @@
-// ✅ index.js — Firebase API Server
+// ✅ index.js — Firebase API Server with API Usage Logging
 const express = require('express');
 const admin = require('firebase-admin');
 const crypto = require('crypto');
@@ -46,6 +46,7 @@ async function checkApiKey(req, res, next) {
     for (const org in allKeys) {
       if (allKeys[org].apiKey === clientKey) {
         req.encryptionKey = crypto.createHash('sha256').update(clientKey).digest();
+        req.orgKey = org; // for logging
         req.orgName = allKeys[org].name;
         return next();
       }
@@ -70,6 +71,14 @@ app.get('/data/:id', checkApiKey, async (req, res) => {
 
     const encrypted = encrypt(snapshot.val(), req.encryptionKey);
     res.json(encrypted);
+
+    // 🔍 Log the API usage
+    const usageLog = {
+      id: id,
+      timestamp: Date.now()
+    };
+
+    await db.ref(`/apiUsageLogs/${req.orgKey}`).push(usageLog);
   } catch (err) {
     console.error('Data fetch error:', err);
     res.status(500).json({ error: 'Internal server error' });
